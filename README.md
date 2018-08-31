@@ -7,7 +7,7 @@ Uninstall everything just as easily if you need to.
 
 Clone the repository and make the script executable:
 
-````bash
+```bash
 $ git clone git@github.com:fabiomaia/linuxify.git
 $ cd linuxify/
 $ chmod +x linuxify.sh
