@@ -11,6 +11,7 @@ Clone the repository and make the script executable:
 $ git clone git@github.com:fabiomaia/linuxify.git
 $ cd linuxify/
 $ chmod +x linuxify.sh
+```
 
 Optionally make the script available in your `$PATH`:
 
