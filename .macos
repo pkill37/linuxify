@@ -1,0 +1,20 @@
+# most programs
+export MANPATH="/usr/local/share/man:$MANPATH"
+export INFOPATH="/usr/local/share/info:$INFOPATH"
+
+# coreutils
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+# make
+export PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
+export MANPATH="/usr/local/opt/make/libexec/gnuman:$MANPATH"
+
+# m4
+export PATH="/usr/local/opt/m4/bin:$PATH"
+
+# file-formula
+export PATH="/usr/local/opt/file-formula/bin:$PATH"
+
+# unzip
+export PATH="/usr/local/opt/unzip/bin:$PATH"
