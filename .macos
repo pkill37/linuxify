@@ -18,3 +18,6 @@ export PATH="/usr/local/opt/file-formula/bin:$PATH"
 
 # unzip
 export PATH="/usr/local/opt/unzip/bin:$PATH"
+
+# python
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
