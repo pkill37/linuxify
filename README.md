@@ -1,7 +1,11 @@
 # linuxify
 
-Transparently transform macOS into a GNU/Linux experience by installing missing GNU programs, updating outdated GNU programs and replacing their pre-installed BSD counterparts.
-Uninstall everything just as easily if you need to.
+Transparently transform macOS into a fresh GNU/Linux experience by
+
+- installing missing GNU programs
+- updating outdated GNU programs
+- replacing pre-installed BSD programs with their preferred GNU implementation
+- installing other programs common among popular GNU/Linux distributions
 
 ## Installation
 
@@ -48,7 +52,7 @@ $ linuxify install
 
 ## Uninstallation
 
-Run the uninstall procedure:
+If you need to undo the changes made by `linuxify`, run the uninstall procedure:
 
 ```bash
 linuxify uninstall
