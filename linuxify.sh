@@ -54,7 +54,7 @@ formulas=(
 linuxify_install() {
     # Install all formulas
     for (( i=0; i<${#formulas[@]}; i++ )); do
-        brew install "${formulas[i]}"
+        brew install ${formulas[i]}
     done
 
     # Change default shell to brew-installed /usr/local/bin/bash
