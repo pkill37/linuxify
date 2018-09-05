@@ -35,21 +35,6 @@ Source the created `~/.macos` file from `~/.bashrc`, `~/.bash_profile` or simila
 [[ "$OSTYPE" =~ ^darwin ]] && source ~/.macos
 ```
 
-## Updating
-
-In case `linuxify` is significantly updated and you wish to stay up to date, it is recommended that you:
-
-1. Run the uninstall procedure
-2. Pull the latest code or otherwise obtain a fresh copy of the code
-3. Run the install procedure again
-
-```bash
-$ linuxify uninstall
-$ # ...
-$ git pull
-$ linuxify install
-```
-
 ## Uninstallation
 
 If you need to undo the changes made by `linuxify`, run the uninstall procedure:
@@ -59,3 +44,8 @@ linuxify uninstall
 ```
 
 Remove the `.macos` source from `~/.bashrc`, `~/.bash_profile` or similar.
+
+
+## Updating
+
+In case `linuxify` is significantly updated and you wish to stay up to date, it is recommended that you uninstall and reinstall by following the same instructions again.
