@@ -85,7 +85,7 @@ linuxify_uninstall() {
     done
 }
 
-linuxify_info() {
+linuxify_caveats() {
     for formula in "${formulas[@]}"; do
         echo "==============================================================================================================================="
         brew info $(echo "$formula" | cut -d " " -f1)
@@ -98,8 +98,8 @@ main() {
             linuxify_install
         elif [ "$1" == "uninstall" ]; then
             linuxify_uninstall
-        elif [ "$1" == "info" ]; then
-            linuxify_info
+        elif [ "$1" == "caveats" ]; then
+            linuxify_caveats
         fi
     else
         echo "Invalid usage"
