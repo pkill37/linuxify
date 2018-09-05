@@ -37,6 +37,10 @@ formulas=(
     "m4"
     "make --with-default-names"
     "nano"
+    "bison"
+
+    # BSD programs existing in macOS which are outdated
+    "flex"
 
     # Other common/preferred programs in GNU/Linux distributions
     "libressl"

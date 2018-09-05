@@ -21,3 +21,12 @@ export PATH="/usr/local/opt/unzip/bin:$PATH"
 
 # python
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+
+# flex
+export PATH="/usr/local/opt/flex/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/flex/lib"
+export CPPFLAGS="-I/usr/local/opt/flex/include"
+
+# bison
+export PATH="/usr/local/opt/bison/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/bison/lib"
