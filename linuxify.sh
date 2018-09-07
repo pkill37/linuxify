@@ -69,26 +69,22 @@ linuxify_install() {
     # Or, on 10.12 Sierra or later with SIP, declare `set startup-with-shell off` in `~/.gdbinit`:
     grep -qF 'set startup-with-shell off' ~/.gdbinit || echo 'set startup-with-shell off' | sudo tee -a ~/.gdbinit
 
-    # By default non-brewed cpan modules are installed to the Cellar. If you wish for your modules to persist across updates we recommend using `local::lib`.
-    PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib
-    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
-
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp ".linuxify" "$HOME/.linuxify"
     grep -qF '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc || echo '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' | sudo tee -a ~/.bashrc
 }
 
 linuxify_uninstall() {
-    # Change default shell back to macOS /bin/bash
-    sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells
-    chsh -s /bin/bash
+    # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
+    sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc
+    rm -f "$HOME/.linuxify"
 
     # Remove gdb fix
     sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit
 
-    # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
-    sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc
-    rm -f "$HOME/.linuxify"
+    # Change default shell back to macOS /bin/bash
+    sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells
+    chsh -s /bin/bash
 
     # Uninstall all formulas in reverse order
     for (( i=${#linuxify_formulas[@]}-1; i>=0; i-- )); do
