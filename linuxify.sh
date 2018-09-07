@@ -50,7 +50,6 @@ linuxify_formulas=(
     "perl"
     "python"
     "rsync"
-    "svn"
     "unzip"
     "vim --override-system-vi"
 )
