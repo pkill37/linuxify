@@ -70,14 +70,14 @@ linuxify_install() {
     grep -qF 'set startup-with-shell off' ~/.gdbinit || echo 'set startup-with-shell off' | sudo tee -a ~/.gdbinit
 
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
-    cp ".linuxify" "$HOME/.linuxify"
+    cp .linuxify ~/.linuxify
     grep -qF '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc || echo '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' | sudo tee -a ~/.bashrc
 }
 
 linuxify_uninstall() {
     # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc
-    rm -f "$HOME/.linuxify"
+    rm -f ~/.linuxify
 
     # Remove gdb fix
     sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit
