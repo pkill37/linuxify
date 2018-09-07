@@ -7,7 +7,7 @@ if ! [[ "$OSTYPE" =~ darwin* ]]; then
     exit
 fi
 
-formulas=(
+linuxify_formulas=(
     # GNU programs non-existing in macOS
     "watch"
     "wget"
@@ -57,8 +57,8 @@ formulas=(
 
 linuxify_install() {
     # Install all formulas
-    for (( i=0; i<${#formulas[@]}; i++ )); do
-        brew install ${formulas[i]}
+    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
+        brew install ${linuxify_formulas[i]}
     done
 
     # Change default shell to brew-installed /usr/local/bin/bash
@@ -69,30 +69,38 @@ linuxify_install() {
     # One can either codesign the binary as per https://sourceware.org/gdb/wiki/BuildingOnDarwin
     # Or, on 10.12 Sierra or later with SIP, declare `set startup-with-shell off` in `~/.gdbinit`:
     grep -qF 'set startup-with-shell off' ~/.gdbinit || echo 'set startup-with-shell off' | sudo tee -a ~/.gdbinit
+
+    # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
+    cp ".linuxify" "$HOME/.linuxify"
+    grep -qF '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc || echo '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' | sudo tee -a ~/.bashrc
 }
 
 linuxify_uninstall() {
     # Change default shell back to macOS /bin/bash
-    sudo sed -i '/\/usr\/local\/bin\/bash/d' /etc/shells
+    sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells
     chsh -s /bin/bash
 
     # Remove gdb fix
-    sed -i '/set startup-with-shell off/d' ~/.gdbinit
+    sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit
+
+    # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
+    sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc
+    rm -f "$HOME/.linuxify"
 
     # Uninstall all formulas in reverse order
-    for (( i=${#formulas[@]}-1; i>=0; i-- )); do
-        brew uninstall $(echo "${formulas[i]}" | cut -d ' ' -f1)
+    for (( i=${#linuxify_formulas[@]}-1; i>=0; i-- )); do
+        brew uninstall $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
     done
 }
 
 linuxify_caveats() {
-    for formula in "${formulas[@]}"; do
+    for formula in "${linuxify_formulas[@]}"; do
         echo "==============================================================================================================================="
         brew info $(echo "$formula" | cut -d " " -f1)
     done
 }
 
-main() {
+linuxify_main() {
     if [ $# -eq 1 ]; then
         if [ "$1" == "install" ]; then
             linuxify_install
@@ -105,8 +113,6 @@ main() {
         echo "Invalid usage"
         exit
     fi
-
-    brew doctor
 }
 
-main "$@"
+linuxify_main "$@"
