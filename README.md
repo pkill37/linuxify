@@ -1,6 +1,6 @@
 # linuxify
 
-Transparently transform macOS into a fresh GNU/Linux experience by
+Transparently transform the macOS CLI into a fresh GNU/Linux CLI experience by
 
 - installing missing GNU programs
 - updating outdated GNU programs
