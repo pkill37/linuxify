@@ -7,6 +7,9 @@ Transparently transform the macOS CLI into a fresh GNU/Linux CLI experience by
 - replacing pre-installed BSD programs with their preferred GNU implementation
 - installing other programs common among popular GNU/Linux distributions
 
+You should review the script, but if you want to go back you can uninstall just
+as easily as the install.
+
 ## Install
 
 ```bash
