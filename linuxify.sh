@@ -71,7 +71,7 @@ linuxify_install() {
 
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp .linuxify ~/.linuxify
-    grep -qF '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc || echo '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' | tee -a ~/.bashrc
+    grep -qF '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc || { sed -i.bak -e '1i [[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc && rm ~/.bashrc.bak; }
 }
 
 linuxify_uninstall() {
