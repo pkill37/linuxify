@@ -76,14 +76,14 @@ linuxify_install() {
 
 linuxify_uninstall() {
     # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
-    sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc
+    sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc && rm ~/.bashrc.bak
     rm -f ~/.linuxify
 
     # Remove gdb fix
-    sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit
+    sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
 
     # Change default shell back to macOS /bin/bash
-    sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells
+    sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells && sudo rm /etc/shells.bak
     chsh -s /bin/bash
 
     # Uninstall all formulas in reverse order
