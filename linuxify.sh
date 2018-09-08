@@ -55,6 +55,15 @@ linuxify_formulas=(
 )
 
 linuxify_install() {
+
+    # Check for homebrew installation
+    if ! command -v brew > /dev/null; then
+        printf "Homebrew not installed! Installing Homebrew...\n"
+        ruby -e "$(curl --location --fail --silent --show-error https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        export PATH="/usr/local/bin:$PATH"
+    fi
+    brew update
+
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
         brew install ${linuxify_formulas[i]}
