@@ -101,13 +101,11 @@ linuxify_info() {
 
 linuxify_main() {
     if [ $# -eq 1 ]; then
-        if [ "$1" == "install" ]; then
-            linuxify_install
-        elif [ "$1" == "uninstall" ]; then
-            linuxify_uninstall
-        elif [ "$1" == "info" ]; then
-            linuxify_info
-        fi
+        case $1 in
+            "install") linuxify_install ;;
+            "uninstall") linuxify_uninstall ;;
+            "info") linuxify_info ;;
+        esac
     else
         echo "Invalid usage"
         exit
