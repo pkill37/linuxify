@@ -7,6 +7,12 @@ if ! [[ "$OSTYPE" =~ darwin* ]]; then
     exit
 fi
 
+if ! command -v brew > /dev/null; then
+    echo "Homebrew not installed!"
+    echo "In order to use this script please install homebrew from https://brew.sh"
+    exit
+fi
+
 linuxify_formulas=(
     # GNU programs non-existing in macOS
     "watch"
@@ -55,6 +61,7 @@ linuxify_formulas=(
 )
 
 linuxify_install() {
+
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
         brew install ${linuxify_formulas[i]}
