@@ -93,9 +93,9 @@ linuxify_uninstall() {
 }
 
 linuxify_info() {
-    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
+    for i in "${linuxify_formulas[@]}"; do
         echo "==============================================================================================================================="
-        brew info ${linuxify_formulas[i]}
+        brew info $i
     done
 }
 
