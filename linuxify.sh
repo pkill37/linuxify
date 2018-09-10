@@ -13,13 +13,27 @@ if ! command -v brew > /dev/null; then
     exit
 fi
 
-linuxify_formulas=(
+linuxify_installs=(
     # GNU programs non-existing in macOS
     "watch"
     "wget"
     "wdiff --with-gettext"
     "gcc"
     "gdb"
+
+    # Other common/preferred programs in GNU/Linux distributions
+    "libressl"
+    "file-formula"
+    "git"
+    "openssh"
+    "perl"
+    "python"
+    "rsync"
+    "unzip"
+    "vim --override-system-vi"
+) 
+
+linuxify_updates=(
 
     # GNU programs whose BSD counterpart is installed in macOS
     "coreutils"
@@ -48,28 +62,23 @@ linuxify_formulas=(
 
     # BSD programs existing in macOS which are outdated
     "flex"
-
-    # Other common/preferred programs in GNU/Linux distributions
-    "libressl"
-    "file-formula"
-    "git"
-    "openssh"
-    "perl"
-    "python"
-    "rsync"
-    "unzip"
-    "vim --override-system-vi"
 )
 
 linuxify_install() {
 
-    # Install all formulas
-    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
-	if ! command -v ${linuxify_formulas[i]} > /dev/null; then
+    # Install new programs
+    for (( i=0; i<${#linuxify_installs[@]}; i++ )); do
+	if ! command -v ${linuxify_installs[i]} > /dev/null; then
         	brew install ${linuxify_formulas[i]}
 	else
-		echo "${linuxify_formulas[i]} already installed"
+		echo "${linuxify_installs[i]} already installed"
     done
+
+    # Install updates 
+    for (( i=0; i<${#linuxify_updates[@]}; i++ )); do
+      	brew install ${linuxify_updates[i]}
+    done
+
 
     # Change default shell to brew-installed /usr/local/bin/bash
     grep -qF '/usr/local/bin/bash' /etc/shells || echo '/usr/local/bin/bash' | sudo tee -a /etc/shells
