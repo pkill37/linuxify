@@ -18,6 +18,7 @@ linuxify_formulas=(
     "watch"
     "wget"
     "wdiff --with-gettext"
+    "gcc"
     "gdb"
 
     # GNU programs whose BSD counterpart is installed in macOS
@@ -64,7 +65,10 @@ linuxify_install() {
 
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
-        brew install ${linuxify_formulas[i]}
+	if ! command -v ${linuxify_formulas[i]} > /dev/null; then
+        	brew install ${linuxify_formulas[i]}
+	else
+		echo "${linuxify_formulas[i]} already installed"
     done
 
     # Change default shell to brew-installed /usr/local/bin/bash
