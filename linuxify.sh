@@ -2,16 +2,20 @@
 
 set -euo pipefail
 
-if ! [[ "$OSTYPE" =~ darwin* ]]; then
-    echo "This is meant to be run on macOS only"
-    exit
-fi
+linuxify_check_os() {
+  if ! [[ "$OSTYPE" =~ darwin* ]]; then
+      echo "This is meant to be run on macOS only"
+      exit
+  fi
+}
 
-if ! command -v brew > /dev/null; then
-    echo "Homebrew not installed!"
-    echo "In order to use this script please install homebrew from https://brew.sh"
-    exit
-fi
+linuxify_check_brew() {
+  if ! command -v brew > /dev/null; then
+      echo "Homebrew not installed!"
+      echo "In order to use this script please install homebrew from https://brew.sh"
+      exit
+  fi
+}
 
 linuxify_formulas=(
     # GNU programs non-existing in macOS
@@ -61,6 +65,8 @@ linuxify_formulas=(
 )
 
 linuxify_install() {
+    linuxify_check_os;
+    linuxify_check_brew;
 
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
@@ -82,6 +88,9 @@ linuxify_install() {
 }
 
 linuxify_uninstall() {
+    linuxify_check_os;
+    linuxify_check_brew;
+
     # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc && rm ~/.bashrc.bak
     rm -f ~/.linuxify
@@ -100,10 +109,25 @@ linuxify_uninstall() {
 }
 
 linuxify_info() {
+    linuxify_check_os;
+    linuxify_check_brew;
+
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
         echo "==============================================================================================================================="
         brew info ${linuxify_formulas[i]}
     done
+}
+
+linuxify_help() {
+  echo "usage: linuxify.sh [-h] [command]";
+  echo ""
+  echo "valid commands:"
+  echo "  install    install GNU/Linux utilities"
+  echo "  uninstall  uninstall GNU/Linux utilities"
+  echo "  info       show info on GNU/Linux utilities"
+  echo ""
+  echo "optional arguments:"
+  echo "  -h, --help  show this help message and exit"
 }
 
 linuxify_main() {
@@ -112,9 +136,11 @@ linuxify_main() {
             "install") linuxify_install ;;
             "uninstall") linuxify_uninstall ;;
             "info") linuxify_info ;;
+            "-h") linuxify_help ;;
+            "--help") linuxify_help ;;
         esac
     else
-        echo "Invalid usage"
+        linuxify_help;
         exit
     fi
 }
