@@ -84,16 +84,12 @@ linuxify_install() {
 
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp .linuxify ~/.linuxify
-    grep -qF '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc || { sed -i.bak -e '1i [[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' ~/.bashrc && rm ~/.bashrc.bak; }
+    echo "Add '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' to your ~/.bashrc, ~/.zshrc or your shell's equivalent config file"
 }
 
 linuxify_uninstall() {
     linuxify_check_os;
     linuxify_check_brew;
-
-    # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
-    sed -i.bak '/\[\[ "\$OSTYPE" =~ \^darwin \]\] && \[ -f ~\/.linuxify \] && source ~\/.linuxify/d' ~/.bashrc && rm ~/.bashrc.bak
-    rm -f ~/.linuxify
 
     # Remove gdb fix
     sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
@@ -106,6 +102,10 @@ linuxify_uninstall() {
     for (( i=${#linuxify_formulas[@]}-1; i>=0; i-- )); do
         brew uninstall $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
     done
+
+    # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
+    rm -f ~/.linuxify
+    echo "Remove '[[ "$OSTYPE" =~ ^darwin ]] && [ -f ~/.linuxify ] && source ~/.linuxify' from your ~/.bashrc, ~/.zshrc or your shell's equivalent config file"
 }
 
 linuxify_info() {
