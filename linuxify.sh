@@ -23,6 +23,7 @@ linuxify_formulas=(
     "wget"
     "wdiff --with-gettext"
     "gdb"
+    "autoconf"
 
     # GNU programs whose BSD counterpart is installed in macOS
     "coreutils"
