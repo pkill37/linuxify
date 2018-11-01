@@ -67,11 +67,12 @@ linuxify_updates=(
 linuxify_install() {
 
     # Install new programs
-    for (( i=0; i<${#linuxify_installs[@]}; i++ )); do
-	if ! command -v ${linuxify_installs[i]} > /dev/null; then
-        	brew install ${linuxify_formulas[i]}
-	else
-		echo "${linuxify_installs[i]} already installed"
+    for app in $linuxify_installs; do
+    	if ! command -v $app> /dev/null; then
+            	brew install $app
+    	else
+    		echo "$app already installed"
+        fi
     done
 
     # Install updates 
