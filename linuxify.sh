@@ -68,7 +68,7 @@ linuxify_install() {
 
     # Install new programs
     for app in $linuxify_installs; do
-    	if ! command -v $app> /dev/null; then
+    	if ! command -v $(echo $app | awk '{print $1}')> /dev/null; then
             	brew install $app
     	else
     		echo "$app already installed"
