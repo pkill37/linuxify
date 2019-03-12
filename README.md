@@ -13,10 +13,9 @@ as easily as the install.
 ## Install
 
 ```bash
-$ git clone git@github.com:fabiomaia/linuxify.git
-$ cd linuxify/
-$ chmod +x linuxify.sh
-$ ./linuxify.sh install
+git clone https://github.com/fabiomaia/linuxify.git
+cd linuxify/
+./linuxify.sh install
 ```
 
 ## Uninstall
