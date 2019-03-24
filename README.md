@@ -21,5 +21,5 @@ cd linuxify/
 ## Uninstall
 
 ```bash
-$ ./linuxify uninstall
+./linuxify uninstall
 ```
