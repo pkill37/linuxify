@@ -15,11 +15,11 @@ as easily as the install.
 ```bash
 git clone https://github.com/fabiomaia/linuxify.git
 cd linuxify/
-./linuxify.sh install
+./linuxify install
 ```
 
 ## Uninstall
 
 ```bash
-$ ./linuxify.sh uninstall
+$ ./linuxify uninstall
 ```
