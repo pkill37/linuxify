@@ -115,7 +115,7 @@ linuxify_info() {
 
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
         echo "==============================================================================================================================="
-        brew info ${linuxify_formulas[i]}
+        brew info $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
     done
 }
 
