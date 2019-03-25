@@ -1,4 +1,5 @@
 # most programs
+export PATH="/usr/local/bin:$PATH"
 export MANPATH="/usr/local/share/man:$MANPATH"
 export INFOPATH="/usr/local/share/info:$INFOPATH"
 
@@ -36,3 +37,24 @@ export PATH="/usr/local/opt/libressl/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/libressl/lib"
 export CPPFLAGS="-I/usr/local/opt/libressl/include"
 export PKG_CONFIG_PATH="/usr/local/opt/libressl/lib/pkgconfig"
+
+# ed
+export PATH="/usr/local/opt/ed/libexec/gnubin:$PATH"
+
+# findutils
+export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
+
+# gnu-indent
+export PATH="/usr/local/opt/gnu-indent/libexec/gnubin:$PATH"
+
+# gnu-sed
+export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+
+# gnu-tar
+export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
+
+# gnu-which
+export PATH="/usr/local/opt/gnu-which/libexec/gnubin:$PATH"
+
+# grep
+export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
