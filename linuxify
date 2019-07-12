@@ -17,6 +17,19 @@ linuxify_check_brew() {
   fi
 }
 
+linuxify_check_dirs() {
+    result=0
+
+    for dir in /usr/local/bin /usr/local/sbin; do
+        if [[ ! -d $dir || ! -w $dir ]]; then
+            echo "$dir must exist and be writeable"
+            result=1
+        fi
+    done
+
+    return $result
+}
+
 linuxify_formulas=(
     # GNU programs non-existing in macOS
     "watch"
@@ -68,6 +81,7 @@ linuxify_formulas=(
 linuxify_install() {
     linuxify_check_os;
     linuxify_check_brew;
+    linuxify_check_dirs;
 
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
