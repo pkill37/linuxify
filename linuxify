@@ -71,7 +71,9 @@ linuxify_install() {
 
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
-        brew install ${linuxify_formulas[i]}
+        if ! brew ls --versions ${linuxify_formulas[i]} > /dev/null; then
+            brew install ${linuxify_formulas[i]}
+        fi
     done
 
     # Change default shell to brew-installed /usr/local/bin/bash
