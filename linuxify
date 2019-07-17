@@ -122,7 +122,7 @@ linuxify_info() {
 }
 
 linuxify_help() {
-  echo "usage: linuxify.sh [-h] [command]";
+  echo "usage: linuxify [-h] [command]";
   echo ""
   echo "valid commands:"
   echo "  install    install GNU/Linux utilities"
