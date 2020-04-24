@@ -97,7 +97,7 @@ linuxify_install() {
         echo # Blank line so the password entry isn't bunched-up
         chsh -s /usr/local/bin/bash
     else
-        printf "\nOK, leaving your shell as $SHELL\n"
+        echo "OK, leaving your shell as $SHELL"
     fi
 
     # gdb requires special privileges to access Mach ports.
@@ -120,7 +120,7 @@ linuxify_uninstall() {
     # Offer to change default shell back to macOS default
     bash_is_local=false
     if [[ $SHELL =~ local ]]; then
-        read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? "
+        read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? " -n 1 -r
         if [[ $REPLY =~ [Yy]$ ]]; then
             sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells && sudo rm /etc/shells.bak
             echo
@@ -130,7 +130,7 @@ linuxify_uninstall() {
                 chsh -s /bin/bash
             fi
         else
-            printf "\nOK, leaving your shell as $SHELL\n"
+            echo "OK, leaving your shell as $SHELL"
             if [[ $SHELL == /usr/bin/local/bash ]]; then
                 bash_is_local=true
             fi
