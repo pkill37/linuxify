@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/bin/bash
 
 set -euo pipefail
 
@@ -94,6 +94,7 @@ linuxify_install() {
     read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
     if [[ $REPLY =~ [Yy]$ ]]; then
         grep -qF '/usr/local/bin/bash' /etc/shells || echo '/usr/local/bin/bash' | sudo tee -a /etc/shells > /dev/null
+        echo # Blank line so the password entry isn't bunched-up
         chsh -s /usr/local/bin/bash
     else
         printf "\nOK, leaving your shell as $SHELL\n"
@@ -117,10 +118,12 @@ linuxify_uninstall() {
     sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
 
     # Offer to change default shell back to macOS default
+    bash_is_local=false
     if [[ $SHELL =~ local ]]; then
         read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? "
         if [[ $REPLY =~ [Yy]$ ]]; then
             sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells && sudo rm /etc/shells.bak
+            echo
             if [[ $(sw_vers -productVersion | awk -F. '{print $2}') -gt 14 ]]; then
                 chsh -s /bin/zsh
             else
@@ -128,13 +131,23 @@ linuxify_uninstall() {
             fi
         else
             printf "\nOK, leaving your shell as $SHELL\n"
+            if [[ $SHELL == /usr/bin/local/bash ]]; then
+                bash_is_local=true
+            fi
         fi
     fi
 
     # Uninstall all formulas in reverse order
     for (( i=${#linuxify_formulas[@]}-1; i>=0; i-- )); do
-        brew uninstall -f $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
+        if [[ ${linuxify_formulas[i]} != bash ]]; then
+            brew uninstall -f $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
+        fi
     done
+    
+    # Only remove bash if the user didn't elect to keep it as their shell
+    if [[ "$bash_is_local" != true ]]; then
+        brew uninstall bash
+    fi
 
     # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     rm -f ~/.linuxify
