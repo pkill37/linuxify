@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -euo pipefail
 
 linuxify_check_os() {
@@ -115,7 +114,7 @@ linuxify_uninstall() {
     linuxify_check_brew;
 
     # Remove gdb fix
-    sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
+    [ -f ~/.gdbinit ] && sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
 
     # Offer to change default shell back to macOS default
     bash_is_local=false
