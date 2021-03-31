@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+export CPU_BRAND_STRING="$(sysctl -a | /usr/bin/awk '/machdep.cpu.brand_string/{print $2}')"
+
 linuxify_check_os() {
   if ! [[ "$OSTYPE" =~ darwin* ]]; then
       echo "This is meant to be run on macOS only"
@@ -16,10 +18,13 @@ linuxify_check_brew() {
   fi
 }
 
+linuxify_set_prefix() {
+  export BREW_PREFIX="$(brew --prefix)"
+}
+
 linuxify_check_dirs() {
     result=0
-
-    for dir in /usr/local/bin /usr/local/sbin; do
+    for dir in ${BREW_PREFIX}/bin ${BREW_PREFIX}/sbin; do
         if [[ ! -d $dir || ! -w $dir ]]; then
             echo "$dir must exist and be writeable"
             result=1
@@ -34,7 +39,7 @@ linuxify_formulas=(
     "watch"
     "wget"
     "wdiff"
-    "gdb"
+    # "gdb" intel only
     "autoconf"
 
     # GNU programs whose BSD counterpart is installed in macOS
@@ -77,32 +82,48 @@ linuxify_formulas=(
     "vim"
 )
 
-linuxify_install() {
-    linuxify_check_os;
-    linuxify_check_brew;
-    linuxify_check_dirs;
-
-    # Install all formulas
-    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
-        if ! brew ls --versions ${linuxify_formulas[i]} > /dev/null; then
-            brew install ${linuxify_formulas[i]}
-        fi
-    done
-
-    # Offer to change shell to newly installed bash
-    read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
-    if [[ $REPLY =~ [Yy]$ ]]; then
-        grep -qF '/usr/local/bin/bash' /etc/shells || echo '/usr/local/bin/bash' | sudo tee -a /etc/shells > /dev/null
-        echo # Blank line so the password entry isn't bunched-up
-        chsh -s /usr/local/bin/bash
-    else
-        echo "OK, leaving your shell as $SHELL"
+linuxify_install_gdb() {
+    if ! brew ls --versions gdb > /dev/null; then
+        echo "Installing gdb"
+        brew install gdb
     fi
-
     # gdb requires special privileges to access Mach ports.
     # One can either codesign the binary as per https://sourceware.org/gdb/wiki/BuildingOnDarwin
     # Or, on 10.12 Sierra or later with SIP, declare `set startup-with-shell off` in `~/.gdbinit`:
     grep -qF 'set startup-with-shell off' ~/.gdbinit || echo 'set startup-with-shell off' | tee -a ~/.gdbinit > /dev/null
+}
+
+linuxify_install() {
+    linuxify_check_os;
+    linuxify_check_brew;
+    linuxify_set_prefix;
+    linuxify_check_dirs;
+
+    # Install all formulas
+    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
+        INSTALLED=$(brew ls --versions ${linuxify_formulas[i]})
+        if [[ -n $INSTALLED ]]; then
+            echo "Found Existing ${linuxify_formulas[i]} - ${INSTALLED}"
+        else
+            echo "Installing ${linuxify_formulas[i]}"
+            brew install ${linuxify_formulas[i]}
+        fi
+    done
+
+    if [[ $CPU_BRAND_STRING != 'Apple' ]]; then
+        linuxify_install_gdb
+    fi
+
+    # Offer to change shell to newly installed bash
+    read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
+    if [[ $REPLY =~ [Yy]$ ]]; then
+        grep -qF "${BREW_PREFIX}/bin/bash" /etc/shells || echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells > /dev/null
+        echo # Blank line so the password entry isn't bunched-up
+        chsh -s ${BREW_PREFIX}/bin/bash
+    else
+        echo "OK, leaving your shell as $SHELL"
+    fi
+
 
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp .linuxify ~/.linuxify
@@ -112,6 +133,7 @@ linuxify_install() {
 linuxify_uninstall() {
     linuxify_check_os;
     linuxify_check_brew;
+    linuxify_set_prefix;
 
     # Remove gdb fix
     [ -f ~/.gdbinit ] && sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
@@ -121,7 +143,7 @@ linuxify_uninstall() {
     if [[ $SHELL =~ local ]]; then
         read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? " -n 1 -r
         if [[ $REPLY =~ [Yy]$ ]]; then
-            sudo sed -i.bak '/\/usr\/local\/bin\/bash/d' /etc/shells && sudo rm /etc/shells.bak
+            sudo sed -i.bak "|${BREW_PREFIX}/bin/bash|d" /etc/shells && sudo rm /etc/shells.bak
             echo
             if [[ $(sw_vers -productVersion | awk -F. '{print $2}') -gt 14 ]]; then
                 chsh -s /bin/zsh
@@ -130,7 +152,7 @@ linuxify_uninstall() {
             fi
         else
             echo "OK, leaving your shell as $SHELL"
-            if [[ $SHELL == /usr/bin/local/bash ]]; then
+            if [[ $SHELL == ${BREW_PREFIX}/bin/bash ]]; then
                 bash_is_local=true
             fi
         fi
@@ -142,7 +164,7 @@ linuxify_uninstall() {
             brew uninstall -f $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
         fi
     done
-    
+
     # Only remove bash if the user didn't elect to keep it as their shell
     if [[ "$bash_is_local" != true ]]; then
         brew uninstall bash
