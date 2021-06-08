@@ -101,9 +101,8 @@ linuxify_install() {
 
     # Install all formulas
     for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
-        INSTALLED=$(brew ls --versions ${linuxify_formulas[i]})
-        if [[ -n $INSTALLED ]]; then
-            echo "Found Existing ${linuxify_formulas[i]} - ${INSTALLED}"
+        if brew ls --versions ${linuxify_formulas[i]}; then
+            echo "Found Existing ${linuxify_formulas[i]}"
         else
             echo "Installing ${linuxify_formulas[i]}"
             brew install ${linuxify_formulas[i]}
