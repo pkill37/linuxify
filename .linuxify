@@ -1,64 +1,216 @@
-BREW_HOME=$(brew --prefix)
+export BREW_PREFIX="$(brew --prefix)"
+
+if ! [[ "$OSTYPE" =~ darwin* ]]; then
+    echo "This is meant to be run on macOS only"
+    exit
+fi
+
+if ! command -v brew > /dev/null; then
+    echo "Homebrew not installed!"
+    echo "In order to use this script please install homebrew from https://brew.sh"
+    exit
+fi
+
+for dir in ${BREW_PREFIX}/bin ${BREW_PREFIX}/sbin; do
+    if [[ ! -d $dir || ! -w $dir ]]; then
+        echo "$dir must exist and be writeable"
+        exit
+    fi
+done
 
 # most programs
-export PATH="${BREW_HOME}/bin:$PATH"
-export MANPATH="${BREW_HOME}/share/man:$MANPATH"
-export INFOPATH="${BREW_HOME}/share/info:$INFOPATH"
+export PATH="${BREW_PREFIX}/bin:$PATH"
+export MANPATH="${BREW_PREFIX}/share/man:$MANPATH"
+export INFOPATH="${BREW_PREFIX}/share/info:$INFOPATH"
 
 # coreutils
-export PATH="${BREW_HOME}/opt/coreutils/libexec/gnubin:$PATH"
-export MANPATH="${BREW_HOME}/opt/coreutils/libexec/gnuman:$MANPATH"
+export PATH="${BREW_PREFIX}/opt/coreutils/libexec/gnubin:$PATH"
+export MANPATH="${BREW_PREFIX}/opt/coreutils/libexec/gnuman:$MANPATH"
 
 # make
-export PATH="${BREW_HOME}/opt/make/libexec/gnubin:$PATH"
-export MANPATH="${BREW_HOME}/opt/make/libexec/gnuman:$MANPATH"
+export PATH="${BREW_PREFIX}/opt/make/libexec/gnubin:$PATH"
+export MANPATH="${BREW_PREFIX}/opt/make/libexec/gnuman:$MANPATH"
 
 # m4
-export PATH="${BREW_HOME}/opt/m4/bin:$PATH"
+export PATH="${BREW_PREFIX}/opt/m4/bin:$PATH"
 
 # file-formula
-export PATH="${BREW_HOME}/opt/file-formula/bin:$PATH"
+export PATH="${BREW_PREFIX}/opt/file-formula/bin:$PATH"
 
 # unzip
-export PATH="${BREW_HOME}/opt/unzip/bin:$PATH"
+export PATH="${BREW_PREFIX}/opt/unzip/bin:$PATH"
 
 # python
-export PATH="${BREW_HOME}/opt/python/libexec/bin:$PATH"
+export PATH="${BREW_PREFIX}/opt/python/libexec/bin:$PATH"
 
 # flex
-export PATH="${BREW_HOME}/opt/flex/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/flex/lib"
-export CPPFLAGS="-I${BREW_HOME}/opt/flex/include"
+export PATH="${BREW_PREFIX}/opt/flex/bin:$PATH"
+export LDFLAGS="-L${BREW_PREFIX}/opt/flex/lib"
+export CPPFLAGS="-I${BREW_PREFIX}/opt/flex/include"
 
 # bison
-export PATH="${BREW_HOME}/opt/bison/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/bison/lib"
+export PATH="${BREW_PREFIX}/opt/bison/bin:$PATH"
+export LDFLAGS="-L${BREW_PREFIX}/opt/bison/lib"
 
 # libressl
-export PATH="${BREW_HOME}/opt/libressl/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/libressl/lib"
-export CPPFLAGS="-I${BREW_HOME}/opt/libressl/include"
-export PKG_CONFIG_PATH="${BREW_HOME}/opt/libressl/lib/pkgconfig"
+export PATH="${BREW_PREFIX}/opt/libressl/bin:$PATH"
+export LDFLAGS="-L${BREW_PREFIX}/opt/libressl/lib"
+export CPPFLAGS="-I${BREW_PREFIX}/opt/libressl/include"
+export PKG_CONFIG_PATH="${BREW_PREFIX}/opt/libressl/lib/pkgconfig"
 
 # ed
-export PATH="${BREW_HOME}/opt/ed/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/ed/libexec/gnubin:$PATH"
 
 # findutils
-export PATH="${BREW_HOME}/opt/findutils/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/findutils/libexec/gnubin:$PATH"
 
 # gnu-indent
-export PATH="${BREW_HOME}/opt/gnu-indent/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/gnu-indent/libexec/gnubin:$PATH"
 
 # gnu-sed
-export PATH="${BREW_HOME}/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/gnu-sed/libexec/gnubin:$PATH"
 
 # gnu-tar
-export PATH="${BREW_HOME}/opt/gnu-tar/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/gnu-tar/libexec/gnubin:$PATH"
 
 # gnu-which
-export PATH="${BREW_HOME}/opt/gnu-which/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/gnu-which/libexec/gnubin:$PATH"
 
 # grep
-export PATH="${BREW_HOME}/opt/grep/libexec/gnubin:$PATH"
+export PATH="${BREW_PREFIX}/opt/grep/libexec/gnubin:$PATH"
 
-unset BREW_HOME
+export CPU_BRAND_STRING="$(sysctl -a | /usr/bin/awk '/machdep.cpu.brand_string/{print $2}')"
+
+linuxify_formulas=(
+    # GNU programs non-existing in macOS
+    "watch"
+    "wget"
+    "wdiff"
+    # "gdb" intel only
+    "autoconf"
+
+    # GNU programs whose BSD counterpart is installed in macOS
+    "coreutils"
+    "binutils"
+    "diffutils"
+    "ed"
+    "findutils"
+    "gawk"
+    "gnu-indent"
+    "gnu-sed"
+    "gnu-tar"
+    "gnu-which"
+    "grep"
+    "gzip"
+    "screen"
+
+    # GNU programs existing in macOS which are outdated
+    "bash"
+    "emacs"
+    "gpatch"
+    "less"
+    "m4"
+    "make"
+    "nano"
+    "bison"
+
+    # BSD programs existing in macOS which are outdated
+    "flex"
+
+    # Other common/preferred programs in GNU/Linux distributions
+    "libressl"
+    "file-formula"
+    "git"
+    "openssh"
+    "perl"
+    "python"
+    "rsync"
+    "unzip"
+    "vim"
+)
+
+linuxify_install_gdb() {
+    if ! brew ls --versions gdb > /dev/null; then
+        echo "Installing gdb"
+        brew install gdb
+    fi
+    # gdb requires special privileges to access Mach ports.
+    # One can either codesign the binary as per https://sourceware.org/gdb/wiki/BuildingOnDarwin
+    # Or, on 10.12 Sierra or later with SIP, declare `set startup-with-shell off` in `~/.gdbinit`:
+    grep -qF 'set startup-with-shell off' ~/.gdbinit || echo 'set startup-with-shell off' | tee -a ~/.gdbinit > /dev/null
+}
+
+linuxify_install() {
+    # Install all formulas
+    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
+        if brew ls --versions ${linuxify_formulas[i]}; then
+            echo "Found Existing ${linuxify_formulas[i]}"
+        else
+            echo "Installing ${linuxify_formulas[i]}"
+            brew install ${linuxify_formulas[i]}
+        fi
+    done
+
+    if [[ $CPU_BRAND_STRING != 'Apple' ]]; then
+        linuxify_install_gdb
+    fi
+
+    # Offer to change shell to newly installed bash
+    read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
+    if [[ $REPLY =~ [Yy]$ ]]; then
+        grep -qF "${BREW_PREFIX}/bin/bash" /etc/shells || echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells > /dev/null
+        echo # Blank line so the password entry isn't bunched-up
+        chsh -s ${BREW_PREFIX}/bin/bash
+    else
+        echo "OK, leaving your shell as $SHELL"
+    fi
+
+
+    # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
+    cp .linuxify ~/.linuxify
+    echo "Add '. ~/.linuxify' to your ~/.bashrc, ~/.zshrc or your shell's equivalent config file"
+}
+
+linuxify_uninstall() {
+    # Remove gdb fix
+    [ -f ~/.gdbinit ] && sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
+
+    # Offer to change default shell back to macOS default
+    bash_is_local=false
+    if [[ $SHELL =~ local ]]; then
+        read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? " -n 1 -r
+        if [[ $REPLY =~ [Yy]$ ]]; then
+            sudo sed -i.bak "|${BREW_PREFIX}/bin/bash|d" /etc/shells && sudo rm /etc/shells.bak
+            echo
+            if [[ $(sw_vers -productVersion | awk -F. '{print $2}') -gt 14 ]]; then
+                chsh -s /bin/zsh
+            else
+                chsh -s /bin/bash
+            fi
+        else
+            echo "OK, leaving your shell as $SHELL"
+            if [[ $SHELL == ${BREW_PREFIX}/bin/bash ]]; then
+                bash_is_local=true
+            fi
+        fi
+    fi
+
+    # Uninstall all formulas in reverse order
+    for (( i=${#linuxify_formulas[@]}-1; i>=0; i-- )); do
+        if [[ ${linuxify_formulas[i]} != bash ]]; then
+            brew uninstall -f $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
+        fi
+    done
+
+    # Only remove bash if the user didn't elect to keep it as their shell
+    if [[ "$bash_is_local" != true ]]; then
+        brew uninstall bash
+    fi
+}
+
+linuxify_info() {
+    for (( i=0; i<${#linuxify_formulas[@]}; i++ )); do
+        brew info $(echo "${linuxify_formulas[i]}" | cut -d ' ' -f1)
+        printf "\n\n===============================================================================================================================\n\n"
+    done
+}
