@@ -1,0 +1,31 @@
+echo 'LOADED .bashrc'
+alias src=". ~/.bashrc"
+
+## Ignore if already exists
+if [ -f ~/.bash_aliases ]; then
+. ~/.bash_aliases
+fi
+
+# This sets bash prompt like "scooby:~ smj  Thu May 17 17:28:38"
+# see https://www.linuxnix.com/linuxunix-shell-ps1-prompt-explained-in-detail/
+#PS1="\h:\W \u  \d \t \$"
+
+export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+
+export LS_OPTIONS='--color=auto'
+eval "$(dircolors -b)"
+
+alias ls='ls -GFh $LS_OPTIONS'
+alias ll="ls -alphG"
+
+## get rid of command not found ##
+alias cd..='cd ..' 
+## a quick way to get out of current directory ##
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
+alias .4='cd ../../../../'
+alias .5='cd ../../../../..'

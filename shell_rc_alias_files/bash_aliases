@@ -1,0 +1,66 @@
+echo 'LOADED .bash_aliases'
+
+BREW_BIN="/usr/local/bin/brew"
+if [ -f "/opt/homebrew/bin/brew" ]; then
+    BREW_BIN="/opt/homebrew/bin/brew"
+fi
+
+if type "${BREW_BIN}" &> /dev/null; then
+    export BREW_PREFIX="$("${BREW_BIN}" --prefix)"
+    for bindir in "${BREW_PREFIX}/opt/"*"/libexec/gnubin"; do export PATH=$bindir:$PATH; done
+    for bindir in "${BREW_PREFIX}/opt/"*"/bin"; do export PATH=$bindir:$PATH; done
+    for mandir in "${BREW_PREFIX}/opt/"*"/libexec/gnuman"; do export MANPATH=$mandir:$MANPATH; done
+    for mandir in "${BREW_PREFIX}/opt/"*"/share/man/man1"; do export MANPATH=$mandir:$MANPATH; done
+fi
+export TF_PLUGIN_CACHE_DIR=~/.terraform/plugin-cache
+
+alias lf="ls -l | egrep -v '^d' | cut -d':' -f 2 | cut -d' ' -f 2"
+alias ldir="ls -alphG --color=auto | egrep '^d' | cut -d':' -f 2 | cut -d' ' -f 2"
+
+## gpg
+GPG_TTY=$(tty)
+export GPG_TTY
+
+getmyip() {
+  curl http://checkip.amazonaws.com/
+}
+
+showicloud() {
+	find . -name '.*icloud' | perl -pe 's|(.*)/.(.*).icloud|$1/$2|s' | while read file; do echo "file - $file"; done
+}
+
+geticloud() {
+	find . -name '.*icloud' | perl -pe 's|(.*)/.(.*).icloud|$1/$2|s' | while read file; do brctl download "$file"; done
+}
+
+# list the authors of a given release in Git
+#
+listauthors() {
+  TAG=$1
+  START_TAG=$(echo $TAG | cut -d '.' -f 1).0.0
+  echo "FETCHING TAGS"
+  echo $START_TAG
+
+  git fetch
+  echo "CLEANING UP....."
+  rm combinedOutput.tmp
+  git log --pretty=format:"%h,%an,%ae,%s" $START_TAG...$TAG #| sort -g > combinedOutput.tmp
+}
+
+giturl() {
+  ## Returns git url e.g.
+  ## git@github.com:smjmoj/linuxify.git
+  local remote_origin_url
+  remote_origin_url=$(git config remote.origin.url)
+  echo  "${remote_origin_url}"
+  echo  "${remote_origin_url}" | pbcopy
+}
+
+gitweb() {
+  ## Returns git web HTTPS url e.g.
+  ## https://github.com/smjmoj/linuxify
+  local remote_origin_url
+  remote_origin_url="https://$(git config remote.origin.url | cut -d : -f 1 | cut -d @ -f 2)/$(git config remote.origin.url | cut -d : -f 2 | cut -d . -f 1)"
+  echo  "${remote_origin_url}"
+  echo  "${remote_origin_url}" | pbcopy
+}
