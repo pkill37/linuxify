@@ -64,3 +64,5 @@ gitweb() {
   echo  "${remote_origin_url}"
   echo  "${remote_origin_url}" | pbcopy
 }
+
+alias tfenvuse='tfenv use $(cat versions.tf 2> /dev/null | grep required_version | cut -d "\"" -f 2 | cut -d " " -f 2) && tfenv pin'

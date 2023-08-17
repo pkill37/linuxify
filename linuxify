@@ -91,6 +91,8 @@ linuxify_formulas=(
     "gpg"
     "docker"
     "aws-vault"
+    "tfenv"
+    "iterm2"
 
 )
 
