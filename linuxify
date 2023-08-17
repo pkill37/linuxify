@@ -127,7 +127,7 @@ linuxify_install() {
         linuxify_install_gdb
     fi
 
-    Offer to change shell to newly installed bash
+    ## Offer to change shell to newly installed bash
     read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
     if [[ $REPLY =~ [Yy]$ ]]; then
         grep -qF "${BREW_PREFIX}/bin/bash" /etc/shells || echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells > /dev/null
@@ -136,28 +136,6 @@ linuxify_install() {
     else
         echo "OK, leaving your shell as $SHELL"
     fi
-
-    ## Update shell config files
-    if [ -f ~/.bash_profile ]; then
-        cp ~/.bash_profile ~/.bash_profile.bak
-    fi
-    cat ./shell_rc_alias_files/bash_profile > ~/.bash_profile
-
-    if [ -f ~/.bashrc ]; then
-        cp ~/.bashrc ~/.bashrc.bak
-    fi
-    cat ./shell_rc_alias_files/bashrc > ~/.bashrc
-    
-    if [ -f ~/.bash_aliases ]; then
-        cp ~/.bash_aliases ~/.bash_aliases.bak
-    fi
-    cat ./shell_rc_alias_files/bash_aliases > ~/.bash_aliases
-    
-    if [ -f ~/.zshrc ]; then
-        cp ~/.zshrc ~/.zshrc.bak
-    fi
-    cat ./shell_rc_alias_files/zshrc >> ~/.zshrc
-
 
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp .linuxify ~/.linuxify

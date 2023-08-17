@@ -49,7 +49,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 After run this to link the `.bash_aliases` again after Oh-My-Zsh install
 
 ```bash
-cat ./shell_rc_alias_files/zshrc >> ~/.zshrc
+./set_aliases
 ```
 
 

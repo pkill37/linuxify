@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euo pipefail
+
+## Update shell config files
+if [ -f ~/.bash_profile ]; then
+    cp ~/.bash_profile ~/.bash_profile.bak
+fi
+cat ./shell_rc_alias_files/bash_profile > ~/.bash_profile
+
+if [ -f ~/.bashrc ]; then
+    cp ~/.bashrc ~/.bashrc.bak
+fi
+cat ./shell_rc_alias_files/bashrc > ~/.bashrc
+
+if [ -f ~/.bash_aliases ]; then
+    cp ~/.bash_aliases ~/.bash_aliases.bak
+fi
+cat ./shell_rc_alias_files/bash_aliases > ~/.bash_aliases
+
+if [ -f ~/.zshrc ]; then
+    cp ~/.zshrc ~/.zshrc.bak
+fi
+cat ./shell_rc_alias_files/zshrc >> ~/.zshrc
