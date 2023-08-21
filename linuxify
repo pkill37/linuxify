@@ -90,9 +90,11 @@ linuxify_formulas=(
     "zsh"
     "gpg"
     "docker"
+    "awscli"
     "aws-vault"
     "tfenv"
     "iterm2"
+    "jq"
 
 )
 
