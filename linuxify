@@ -1,6 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
+##
+## exclude anything that's managed by ASDF
+## -- e.g. I removed the brew-managed python
+##
+## @@note coordinate changes to the `linuxify` (no dot) and `.linuxify` (dot)
+## scripts: when adding an item to the non-dot script, add a PATH entry to dot
+##
+
 export CPU_BRAND_STRING="$(sysctl -a | /usr/bin/awk '/machdep.cpu.brand_string/{print $2}')"
 
 linuxify_check_os() {
