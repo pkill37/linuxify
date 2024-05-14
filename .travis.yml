@@ -1,4 +1,0 @@
-os: osx
-language: bash
-script:
-    - bash -n linuxify
