@@ -47,6 +47,7 @@ linuxify_formulas=(
     "watch"
     "wget"
     "wdiff"
+    "gpg"
     # "gdb" intel only
     "autoconf"
 
@@ -88,6 +89,7 @@ linuxify_formulas=(
     "unzip"
     "vim"
     "libpq"
+    "sqlfluff"
 )
 
 linuxify_install_gdb() {
