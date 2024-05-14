@@ -12,7 +12,7 @@ Transparently transform the macOS CLI into a fresh GNU/Linux CLI experience by
 &nbsp;
 
 As we update Braidwell standard utilities this repo will be automatically pulled
-to your machine and installed when you open a new shell.
+to your machine and installed when you open a new shell / terminal.
 
 &nbsp;
 
