@@ -11,6 +11,11 @@ Transparently transform the macOS CLI into a fresh GNU/Linux CLI experience by
 
 &nbsp;
 
+As we update Braidwell standard utilities this repo will be automtically pulled
+to your local machine and installed when you open a new shell / terminal.
+
+&nbsp;
+
 ## Login shell
 
 Add this block neat the top of your __~/.zshrc__ file:
@@ -24,10 +29,4 @@ pushd ./linuxify 1>/dev/null && git remote update 1>/dev/null && git status -uno
 popd 1>/dev/null
 . ~/.linuxify
 touch ~/.linuxify
-```
-
-## Uninstall
-
-```bash
-./linuxify uninstall
 ```
