@@ -24,7 +24,7 @@ Add this block near the top of your __~/.zshrc__ file:
 #######################################
 ## use gnu utils in lieu of OSX/BSD
 #######################################
-[[ ! -d ./linuxify ]] && (echo Cloning the linuxify repo ... && git clone git@github.com:braidwell/linuxify.git && cd ./linuxify 1>/dev/null && ./linuxify install)
+[[ ! -d ./linuxify ]] && (echo Cloning the linuxify repo ... && git clone git@github.com:braidwell/linuxify.git && cd ./linuxify && ./linuxify install)
 pushd ./linuxify 1>/dev/null && git remote update 1>/dev/null && git status -uno | grep 'up to date' 1>/dev/null || (echo Pulling latest linuxify update && git pull && ./linuxify install)
 popd 1>/dev/null
 . ~/.linuxify
