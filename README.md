@@ -28,5 +28,4 @@ Add this block neat the top of your __~/.zshrc__ file:
 pushd ./linuxify 1>/dev/null && git remote update 1>/dev/null && git status -uno | grep 'up to date' 1>/dev/null || (echo Pulling latest linuxify update && git pull && ./linuxify install)
 popd 1>/dev/null
 . ~/.linuxify
-touch ~/.linuxify
 ```
