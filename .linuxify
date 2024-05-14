@@ -1,6 +1,6 @@
 ##
-## exclude anything that's managed by ASDF for this project
-## -- e.g. I removed the brew-managed python version
+## exclude anything that's managed by ASDF
+## -- e.g. I removed the brew-managed python
 ##
 ## @@note coordinate changes to the `linuxify` (no dot) and `.linuxify` (dot)
 ## scripts: when adding an item to the non-dot script, add a PATH entry to dot
