@@ -1,3 +1,11 @@
+##
+## exclude anything that's managed by ASDF for this project
+## -- e.g. I removed the brew-managed python version
+##
+## @@note coordinate changes to the `linuxify` (no dot) and `.linuxify` (dot)
+## scripts: when adding an item to the non-dot script, add a PATH entry to dot
+##
+
 BREW_HOME=$(brew --prefix)
 
 # most programs
@@ -21,9 +29,6 @@ export PATH="${BREW_HOME}/opt/file-formula/bin:$PATH"
 
 # unzip
 export PATH="${BREW_HOME}/opt/unzip/bin:$PATH"
-
-# python
-export PATH="${BREW_HOME}/opt/python/libexec/bin:$PATH"
 
 # flex
 export PATH="${BREW_HOME}/opt/flex/bin:$PATH"
@@ -60,5 +65,9 @@ export PATH="${BREW_HOME}/opt/gnu-which/libexec/gnubin:$PATH"
 
 # grep
 export PATH="${BREW_HOME}/opt/grep/libexec/gnubin:$PATH"
+
+# postgres
+# -- for psql and other utilities
+export PATH="${BREW_HOME}/opt/libpq/bin:$PATH"
 
 unset BREW_HOME
