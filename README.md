@@ -18,7 +18,7 @@ to your machine and installed when you open a new shell / terminal.
 
 ## Login shell
 
-Add this block neat the top of your __~/.zshrc__ file:
+Add this block near the top of your __~/.zshrc__ file:
 
 ```shell
 #######################################
