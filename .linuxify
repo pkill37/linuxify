@@ -2,8 +2,9 @@
 ## exclude anything that's managed by ASDF
 ## -- e.g. I removed the brew-managed python
 ##
-## @@note coordinate changes to the `linuxify` (no dot) and `.linuxify` (dot)
-## scripts: when adding an item to the non-dot script, add a PATH entry to dot
+## @@note coordinate changes in "linuxify" (no dot) and ".linuxify" (dot) files
+## -- no coordination required for executable residing in $(brew --prefix)/bin
+## -- for any executable NOT at that path, add a PATH entry to the dot file
 ##
 
 BREW_HOME=$(brew --prefix)
