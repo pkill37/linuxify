@@ -6,7 +6,8 @@ set -euo pipefail
 ## -- e.g. I removed the brew-managed python
 ##
 ## @@note coordinate changes to the `linuxify` (no dot) and `.linuxify` (dot)
-## scripts: when adding an item to the non-dot script, add a PATH entry to dot
+## scripts: when adding an item to the non-dot script, if the new executable
+## doesn't reside in /opt/homebrew/bin, it's required to add a PATH to the dot script
 ##
 
 export CPU_BRAND_STRING="$(sysctl -a | /usr/bin/awk '/machdep.cpu.brand_string/{print $2}')"
