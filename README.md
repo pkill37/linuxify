@@ -1,5 +1,7 @@
 # linuxify
 
+Permanently forked from `pkill37/linuxify:master`. Now with Braidwell standards.
+
 Transparently transform the macOS CLI into a fresh GNU/Linux CLI experience by
 
 - installing missing GNU programs
