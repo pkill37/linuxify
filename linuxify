@@ -113,17 +113,6 @@ linuxify_install() {
         linuxify_install_gdb
     fi
 
-    # Offer to change shell to newly installed bash
-    read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
-    if [[ $REPLY =~ [Yy]$ ]]; then
-        grep -qF "${BREW_PREFIX}/bin/bash" /etc/shells || echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells > /dev/null
-        echo # Blank line so the password entry isn't bunched-up
-        chsh -s ${BREW_PREFIX}/bin/bash
-    else
-        echo "OK, leaving your shell as $SHELL"
-    fi
-
-
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp .linuxify ~/.linuxify
     echo "Add '. ~/.linuxify' to your ~/.bashrc, ~/.zshrc or your shell's equivalent config file"
@@ -136,26 +125,6 @@ linuxify_uninstall() {
 
     # Remove gdb fix
     [ -f ~/.gdbinit ] && sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
-
-    # Offer to change default shell back to macOS default
-    bash_is_local=false
-    if [[ $SHELL =~ local ]]; then
-        read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? " -n 1 -r
-        if [[ $REPLY =~ [Yy]$ ]]; then
-            sudo sed -i.bak "|${BREW_PREFIX}/bin/bash|d" /etc/shells && sudo rm /etc/shells.bak
-            echo
-            if [[ $(sw_vers -productVersion | awk -F. '{print $2}') -gt 14 ]]; then
-                chsh -s /bin/zsh
-            else
-                chsh -s /bin/bash
-            fi
-        else
-            echo "OK, leaving your shell as $SHELL"
-            if [[ $SHELL == ${BREW_PREFIX}/bin/bash ]]; then
-                bash_is_local=true
-            fi
-        fi
-    fi
 
     # Uninstall all formulas in reverse order
     for (( i=${#linuxify_formulas[@]}-1; i>=0; i-- )); do
