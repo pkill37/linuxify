@@ -71,4 +71,7 @@ export PATH="${BREW_HOME}/opt/grep/libexec/gnubin:$PATH"
 # -- for psql and other utilities
 export PATH="${BREW_HOME}/opt/libpq/bin:$PATH"
 
+# curl
+export PATH="${BREW_HOME}/opt/curl/bin:$PATH"
+
 unset BREW_HOME

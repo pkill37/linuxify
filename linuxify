@@ -53,8 +53,9 @@ linuxify_formulas=(
     "autoconf"
 
     # GNU programs whose BSD counterpart is installed in macOS
-    "coreutils"
+    "coreutils" ## 100+ utils -- e.g. cat, cp, date ...
     "binutils"
+    "curl"
     "diffutils"
     "ed"
     "findutils"
