@@ -114,7 +114,14 @@ linuxify_install() {
     fi
 
     # Offer to change shell to newly installed bash
-    read -p "Do you want to change your shell to the latest bash (Y/N)? " -n 1 -r
+    if [[ $SHELL =~ 'bash' ]]; then
+        export PROMPT = "Do you want to change your shell to the latest bash (Y/n)?"
+    else
+        export PROMPT = "Optionally change your shell to bash (Y/n)?"
+    fi
+    
+    read -p $PROMPT -n 1 -r
+
     if [[ $REPLY =~ [Yy]$ ]]; then
         grep -qF "${BREW_PREFIX}/bin/bash" /etc/shells || echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells > /dev/null
         echo # Blank line so the password entry isn't bunched-up
