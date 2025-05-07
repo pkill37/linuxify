@@ -27,18 +27,18 @@ export PATH="${BREW_HOME}/opt/python/libexec/bin:$PATH"
 
 # flex
 export PATH="${BREW_HOME}/opt/flex/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/flex/lib"
-export CPPFLAGS="-I${BREW_HOME}/opt/flex/include"
+export LDFLAGS="-L${BREW_HOME}/opt/flex/lib ${LDFLAGS}"
+export CPPFLAGS="-I${BREW_HOME}/opt/flex/include ${CPPFLAGS}"
 
 # bison
 export PATH="${BREW_HOME}/opt/bison/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/bison/lib"
+export LDFLAGS="-L${BREW_HOME}/opt/bison/lib ${LDFLAGS}"
 
 # libressl
 export PATH="${BREW_HOME}/opt/libressl/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/libressl/lib"
-export CPPFLAGS="-I${BREW_HOME}/opt/libressl/include"
-export PKG_CONFIG_PATH="${BREW_HOME}/opt/libressl/lib/pkgconfig"
+export LDFLAGS="-L${BREW_HOME}/opt/libressl/lib ${LDFLAGS}"
+export CPPFLAGS="-I${BREW_HOME}/opt/libressl/include ${CPPFLAGS}"
+export PKG_CONFIG_PATH="${BREW_HOME}/opt/libressl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # ed
 export PATH="${BREW_HOME}/opt/ed/libexec/gnubin:$PATH"
