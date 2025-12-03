@@ -13,7 +13,7 @@ as easily as the install.
 ## Install
 
 ```bash
-git clone https://github.com/fabiomaia/linuxify.git
+git clone https://github.com/nateProjects/linuxify.git
 cd linuxify/
 ./linuxify install
 ```

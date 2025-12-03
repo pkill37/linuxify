@@ -1,7 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-export CPU_BRAND_STRING="$(sysctl -a | /usr/bin/awk '/machdep.cpu.brand_string/{print $2}')"
+# Get full CPU brand string (e.g., "Apple M1" or "Intel(R) Core(TM) i5-...")
+# This is used to detect Apple Silicon vs Intel Macs
+export CPU_BRAND_STRING="$(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo 'Unknown')"
 
 linuxify_check_os() {
   if ! [[ "$OSTYPE" =~ darwin* ]]; then
@@ -109,7 +111,8 @@ linuxify_install() {
         fi
     done
 
-    if [[ $CPU_BRAND_STRING != 'Apple' ]]; then
+    # Only install gdb on Intel Macs (not supported on Apple Silicon)
+    if [[ ! $CPU_BRAND_STRING =~ ^Apple ]]; then
         linuxify_install_gdb
     fi
 
@@ -138,13 +141,21 @@ linuxify_uninstall() {
     [ -f ~/.gdbinit ] && sed -i.bak '/set startup-with-shell off/d' ~/.gdbinit && rm ~/.gdbinit.bak
 
     # Offer to change default shell back to macOS default
+    # macOS 10.15 Catalina and later (including 11+ Big Sur, Monterey, Ventura, Sonoma, Sequoia): zsh
+    # macOS 10.14 Mojave and earlier: bash
     bash_is_local=false
     if [[ $SHELL =~ local ]]; then
-        read -p "Do you want to change your shell back to macOS default (macOSVersion >= 10.15.x ? zsh : bash) ? " -n 1 -r
+        read -p "Do you want to change your shell back to macOS default (macOS >= 10.15 Catalina ? zsh : bash) ? " -n 1 -r
         if [[ $REPLY =~ [Yy]$ ]]; then
             sudo sed -i.bak "|${BREW_PREFIX}/bin/bash|d" /etc/shells && sudo rm /etc/shells.bak
             echo
-            if [[ $(sw_vers -productVersion | awk -F. '{print $2}') -gt 14 ]]; then
+            # Get macOS version - handle both 10.x and 11+ versioning schemes
+            macos_version=$(sw_vers -productVersion)
+            major_version=$(echo "$macos_version" | awk -F. '{print $1}')
+            minor_version=$(echo "$macos_version" | awk -F. '{print $2}')
+
+            # macOS 10.15+ (Catalina) or macOS 11+ use zsh as default
+            if [[ $major_version -gt 10 ]] || [[ $major_version -eq 10 && $minor_version -gt 14 ]]; then
                 chsh -s /bin/zsh
             else
                 chsh -s /bin/bash
