@@ -17,6 +17,12 @@ cd linuxify/
 ./linuxify install
 ```
 
+## Usage
+
+At the end of the install, a file at `~/.linuxify` will be provided.
+Sourcing this file will update your PATH, MANPATH, and other variables so you
+get the GNU utilites first without needing to prepend them with `g`.
+
 ## Uninstall
 
 ```bash
